@@ -1,75 +1,111 @@
 <template>
-    <div>
-        <h3 class="text-center">Add a New Blog </h3>
-        <form>
-            <label>Blog Title :</label>
-            <input type="text" v-model.lazy="blog.title" required>
-            <label>Blog Content : </label>
-            <textarea v-model.lazy="blog.content" />
-        </form>
-         <div class="boxes">
-            <label>Technology</label>
-            <input type="checkbox" value="Technology" v-model="blog.categories" />
-            <label>Lifestye</label>
-            <input type="checkbox" value="Lifestye" v-model="blog.categories" />
-            <label>Travel</label>
-            <input type="checkbox" value="Travel" v-model="blog.categories" />
+  <div id="add-blog">
+    <h2>Add a New Blog Post</h2>
+    <form>
+        <label>Blog Title:</label>
+        <input type="text" v-model.lazy="blog.title" required />
+        <label>Blog Content:</label>
+        <textarea v-model.lazy ="blog.content"></textarea>
+        <div id="checkboxes">
+          <label>Beauty</label>
+          <input type="checkbox" value="Beauty" v-model="blog.categories" />
+          <label>Fashion</label>
+          <input type="checkbox" value="Fashion" v-model="blog.categories" />
+          <label>Lifestyle</label>
+          <input type="checkbox" value="Lifestyle" v-model="blog.categories" />
+          <label>Travel</label>
+          <input type="checkbox" value="Travel" v-model="blog.categories" />
         </div>
-        <div id="newBlog">
-            <h4>Preview Blog</h4>
-            <p>Blog Title : {{blog.title}}</p>
-            <p>Blog Content :</p>
-            <p>{{blog.content}}</p>
-            <p>Blog Categories: </p>
-            <ul>
-                <li v-for="category in categories">{{blog.category}}</li>
-            </ul>
-        </div>
-       
+        <label>Author:</label>
+        <select v-model="blog.author">
+          <option v-for="author in authors" :key="author.id">{{author}}</option>
+        </select>
+        <button v-on:click.prevent="post">Add Blog</button>
+    </form>
+    <div v-if="submitted">
+      <h3>Thanks for adding your post</h3>
     </div>
+    <div id="preview">
+        <h3>Preview Blog</h3>
+        <p>Blog title:{{blog.title}}</p>
+        <p>Blog content:</p>
+        <p>{{blog.content}}</p>
+        <p>Blog Categories</p>
+        <ul>
+          <li v-for="category in blog.categories" :key="category.id">{{category}}</li>
+        </ul>
+        <p>Author:{{blog.author}}</p>
+    </div>
+  </div>
 </template>
 
 <script>
-export default {
-    data(){
-        return{
-            blog: {
-            title:"",
-            content: "",
-            categories: []
-        }
-        }
-    }
 
+
+export default {
+  
+  data () {
+    return {
+      blog:{
+        title:"",
+        content:"",
+        categories:[],
+        author:""
+      },
+      authors:['Cynthia Dickson', 'Ibitamuno Tony', 'Loraine Melbern'],
+      submitted:false,
+    }
+  },
+  methods:{
+    post: function(){
+      this.$http.post("https://my-json-server.typicode.com/posts"),{
+        id:1,
+        title:this.blog.title,
+      }, then (function(data){
+        console.log(data);
+        this.submitted=true;
+      });
+    }
+  }
 }
 </script>
 
-<style scoped>
-form {
-    text-align: center;
-    background-color: rgb(150, 137, 137);
-    padding: 20px;
+<style>
+body{
+  background-color: rgb(151, 147, 133);
+  color: white;
 }
-#newBlog {
-    background-color: rgb(150, 137, 137);
-    padding: 20px 50px;
+#add-blog *{
+  box-sizing: border-box;
 }
-input, textarea {
-    display: block;
-    width: 100%;
-    padding: 10px;
+#add-blog{
+  margin: 20px auto;
+  max-width:500px;
 }
-label {
-    display: block;
-    margin:20px 0;
+label{
+  display: block;
+  margin: 20px 0 10px;
 }
-.boxes{
-    background-color: rgb(150, 137, 137);
+input[type="text"], textarea{
+  display: block;
+  width: 100%;
+  padding: 8px;
 }
-.boxes input{
-    display: inline;
+#preview{
+  padding: 10px 20px;
+  border: 1px dotted #ccc;
+  margin: 30px 0;
 }
-.boxes label {
-    display: inline;
+h3{
+  margin-top: 10px;
 }
+#checkboxes input{
+  display: inline-block;
+  margin-right: 10px;  
+}
+#checkboxes label{
+  display: inline-block;
+}
+
 </style>
+    
